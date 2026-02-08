@@ -1,0 +1,53 @@
+/* Custom Styles for Social App */
+body {
+    background-color: #f0f2f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-bottom: 1rem;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #1877f2;
+    border-color: #1877f2;
+}
+
+.btn-primary:hover {
+    background-color: #166fe5;
+    border-color: #166fe5;
+}
+
+.post-image {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.comment-section {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.profile-cover {
+    height: 300px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Animations */
+.card:hover {
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+}
