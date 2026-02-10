@@ -26,7 +26,7 @@ class CommentController extends BaseApiController
             $comments = $post->comments()->with('user')->latest()->paginate(15);
             return $this->success($comments->items());
         } catch (Exception $th) {
-                        return $this->error('Failed to fetch comments', 500);
+            return $this->error('Failed to fetch comments', 500);
 
         }
     }

@@ -1,88 +1,89 @@
-@extends('layouts.app')
 
-@section('title', 'منشور')
-
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- Post -->
-            @include('posts.partials.post-card', ['post' => $post])
-
-            <!-- Comments Section -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">التعليقات ({{ $post->comments_count }})</h5>
-                </div>
-                
-                <!-- Add Comment Form -->
-                <div class="card-body border-bottom">
-                    <form action="{{ route('comments.store', $post) }}" method="POST">
-                        @csrf
-                        <div class="d-flex">
-                            <img src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) }}" 
-                                 class="rounded-circle me-2" width="40" height="40" alt="You">
-                            <div class="flex-grow-1">
-                                <textarea name="content" class="form-control @error('content') is-invalid @enderror" 
-                                          rows="2" placeholder="اكتب تعليقاً..." required></textarea>
-                                @error('content')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="text-end mt-2">
-                            <button type="submit" class="btn btn-primary btn-sm">نشر التعليق</button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Comments List -->
-                <div class="card-body">
-                    @forelse($comments as $comment)
-                        <div class="mb-3 pb-3 border-bottom">
-                            <div class="d-flex">
-                                <img src="{{ $comment->user->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name) }}" 
-                                     class="rounded-circle me-2" width="40" height="40" alt="{{ $comment->user->name }}">
-                                <div class="flex-grow-1">
-                                    <div class="bg-light rounded p-2">
-                                        <a href="{{ route('user.profile', $comment->user) }}" class="fw-bold text-decoration-none">
-                                            {{ $comment->user->name }}
-                                        </a>
-                                        <p class="mb-0 mt-1">{{ $comment->content }}</p>
-                                    </div>
-                                    
-                                    <div class="d-flex align-items-center mt-1 small text-muted">
-                                        <form action="{{ route('likes.comment.toggle', $comment) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-link text-decoration-none p-0 me-2">
-                                                <i class="bi bi-heart{{ $comment->likes->where('user_id', Auth::id())->count() ? '-fill text-danger' : '' }}"></i>
-                                                إعجاب ({{ $comment->likes_count }})
-                                            </button>
-                                        </form>
-                                        <span class="me-2">{{ $comment->created_at->diffForHumans() }}</span>
-                                        
-                                        @if($comment->user_id === Auth::id())
-                                            <form action="{{ route('comments.destroy', $comment) }}" method="POST" class="d-inline"
-                                                  onsubmit="return confirm('هل أنت متأكد من حذف هذا التعليق؟')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-link text-danger text-decoration-none p-0">
-                                                    حذف
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-center text-muted">لا توجد تعليقات بعد. كن أول من يعلق!</p>
-                    @endforelse
-
-                    {{ $comments->links() }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@extends('layouts.master')
+@section('css')
 @endsection
+@section('page-header')
+				<!-- breadcrumb -->
+				<div class="breadcrumb-header justify-content-between">
+					<div class="my-auto">
+						<div class="d-flex">
+							<h4 class="content-title mb-0 my-auto">Pages</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Empty</span>
+						</div>
+					</div>
+					<div class="d-flex my-xl-auto right-content">
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-info btn-icon ml-2"><i class="mdi mdi-filter-variant"></i></button>
+						</div>
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-danger btn-icon ml-2"><i class="mdi mdi-star"></i></button>
+						</div>
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-warning  btn-icon ml-2"><i class="mdi mdi-refresh"></i></button>
+						</div>
+						<div class="mb-3 mb-xl-0">
+							<div class="btn-group dropdown">
+								<button type="button" class="btn btn-primary">14 Aug 2019</button>
+								<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" id="dropdownMenuDate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuDate" data-x-placement="bottom-end">
+									<a class="dropdown-item" href="#">2015</a>
+									<a class="dropdown-item" href="#">2016</a>
+									<a class="dropdown-item" href="#">2017</a>
+									<a class="dropdown-item" href="#">2018</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- breadcrumb -->
+@endsection
+@section('content')
+<!-- row -->
+<div class="row">
+
+    <div class="max-w-xl mx-auto mt-6">
+
+        {{-- البوست --}}
+        <h3 class="font-bold">{{ $post->user->name }}</h3>
+        <p class="mb-3">{{ $post->content }}</p>
+
+        @if($post->image)
+            <img src="{{ asset('storage/'.$post->image) }}" class="mb-4">
+        @endif
+
+        <hr>
+
+        {{-- الكومنتات --}}
+        <h4 class="font-bold mt-4">Comments</h4>
+
+        @foreach($post->comments as $comment)
+            <div class="border-b py-2">
+                <strong>{{ $comment->user->name }}</strong>
+                <p>{{ $comment->content }}</p>
+            </div>
+        @endforeach
+
+        <form method="POST"
+            action="{{ route('comments.store', $post) }}"
+            class="mt-4">
+            @csrf
+            <textarea name="content"
+                class="form-control mb-2"
+                placeholder="Write a comment..."></textarea>
+
+            <button class="btn btn-primary">Comment</button>
+        </form>
+
+    </div>
+
+				</div>
+				<!-- row closed -->
+			</div>
+			<!-- Container closed -->
+		</div>
+		<!-- main-content closed -->
+@endsection
+@section('js')
+@endsection
+

@@ -1,66 +1,77 @@
-@extends('layouts.app')
 
-@section('title', 'أصدقائي')
-
+@extends('layouts.master')
+@section('css')
+@endsection
+@section('page-header')
+				<!-- breadcrumb -->
+				<div class="breadcrumb-header justify-content-between">
+					<div class="my-auto">
+						<div class="d-flex">
+							<h4 class="content-title mb-0 my-auto">Pages</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Empty</span>
+						</div>
+					</div>
+					<div class="d-flex my-xl-auto right-content">
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-info btn-icon ml-2"><i class="mdi mdi-filter-variant"></i></button>
+						</div>
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-danger btn-icon ml-2"><i class="mdi mdi-star"></i></button>
+						</div>
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-warning  btn-icon ml-2"><i class="mdi mdi-refresh"></i></button>
+						</div>
+						<div class="mb-3 mb-xl-0">
+							<div class="btn-group dropdown">
+								<button type="button" class="btn btn-primary">14 Aug 2019</button>
+								<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" id="dropdownMenuDate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuDate" data-x-placement="bottom-end">
+									<a class="dropdown-item" href="#">2015</a>
+									<a class="dropdown-item" href="#">2016</a>
+									<a class="dropdown-item" href="#">2017</a>
+									<a class="dropdown-item" href="#">2018</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- breadcrumb -->
+@endsection
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">أصدقائي ({{ $friends->total() }})</h5>
-                    <a href="{{ route('friends.requests') }}" class="btn btn-primary btn-sm">
-                        <i class="bi bi-bell-fill"></i> طلبات الصداقة
-                    </a>
-                </div>
-                <div class="card-body">
-                    @forelse($friends as $friend)
-                        <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
-                            <div class="d-flex align-items-center">
-                                <img src="{{ $friend->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode($friend->name) }}" 
-                                     class="rounded-circle me-3" width="60" height="60" alt="{{ $friend->name }}">
-                                <div>
-                                    <h6 class="mb-0">
-                                        <a href="{{ route('user.profile', $friend) }}" class="text-decoration-none">
-                                            {{ $friend->name }}
-                                        </a>
-                                    </h6>
-                                    <small class="text-muted">
-                                        <i class="bi bi-people"></i> {{ $friend->friends_count }} صديق
-                                    </small>
-                                </div>
-                            </div>
-                            <div>
-                                <a href="{{ route('user.profile', $friend) }}" class="btn btn-sm btn-outline-primary me-2">
-                                    <i class="bi bi-person"></i> الملف الشخصي
-                                </a>
-                                <form action="{{ route('friends.unfriend', $friend) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('هل أنت متأكد من إلغاء الصداقة؟')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-person-x"></i> إلغاء الصداقة
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center py-5">
-                            <i class="bi bi-people" style="font-size: 4rem; color: #ccc;"></i>
-                            <p class="text-muted mt-3">ليس لديك أصدقاء بعد</p>
-                            <a href="{{ route('search.index') }}" class="btn btn-primary">
-                                <i class="bi bi-search"></i> ابحث عن أصدقاء
-                            </a>
-                        </div>
-                    @endforelse
-                </div>
-                @if($friends->hasPages())
-                    <div class="card-footer">
-                        {{ $friends->links() }}
-                    </div>
-                @endif
-            </div>
+				<!-- row -->
+				<div class="row">
+                    <div class="max-w-xl mx-auto mt-6">
+<h2 class="text-xl font-bold mb-4">My Friends</h2>
+
+@foreach($friends as $friend)
+    @php
+        // لو انت صاحب الـ user_id الحالي، اعرض الـ friend، والعكس
+        $friendUser = $friend->sender_id === auth()->id()
+            ? $friend->friend
+            : $friend->user;
+    @endphp
+
+    @if($friendUser)
+        <div class="border p-3 mb-2 flex justify-between">
+            <span>{{ $friendUser->name }}</span>
+
+            <form method="POST" action="{{ route('friends.destroy', $friendUser) }}">
+                @csrf
+                @method('DELETE')
+                <button class="text-red-500">Unfriend</button>
+            </form>
         </div>
-    </div>
+    @endif
+@endforeach
+
 </div>
+				</div>
+				<!-- row closed -->
+			</div>
+			<!-- Container closed -->
+		</div>
+		<!-- main-content closed -->
+@endsection
+@section('js')
 @endsection

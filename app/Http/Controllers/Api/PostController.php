@@ -14,21 +14,7 @@ use Throwable;
 
 class PostController extends BaseApiController
 {
-    /**
-     * @QA\Get(
-     *     path="/api/posts",
-     *     summary="Get all posts",
-     *     tags={"Posts"},
-     *     @QA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @QA\JsonContent(
-     *             type="array",
-     *             @QA\Items(ref="#/components/schemas/Post")
-     *         )
-     *     )
-     * )
-     */
+
 
     public function index()
     {
@@ -176,6 +162,7 @@ try {
 
             return $this->success(['likes' => $count]);
         } catch (Throwable $th) {
+            return $this->error('Something went wrong', 500);
         }
     }
 }

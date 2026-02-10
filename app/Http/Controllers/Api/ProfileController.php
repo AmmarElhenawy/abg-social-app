@@ -175,6 +175,7 @@ public function search(Request $request)
 
     $users = User::where('name', 'LIKE', '%' . $request->q . '%')
                 ->select('id', 'name', 'profile_picture')
+                // ->where('id', '!=', auth()->id());
                 ->paginate(20);
 
     return $this->success($users->items(), 'Users fetched');

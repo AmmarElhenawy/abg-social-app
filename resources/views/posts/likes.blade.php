@@ -1,40 +1,77 @@
-@extends('layouts.app')
-
-@section('title', 'الإعجابات')
-
+@extends('layouts.master')
+@section('css')
+@endsection
+@section('page-header')
+				<!-- breadcrumb -->
+				<div class="breadcrumb-header justify-content-between">
+					<div class="my-auto">
+						<div class="d-flex">
+							<h4 class="content-title mb-0 my-auto">Pages</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Empty</span>
+						</div>
+					</div>
+					<div class="d-flex my-xl-auto right-content">
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-info btn-icon ml-2"><i class="mdi mdi-filter-variant"></i></button>
+						</div>
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-danger btn-icon ml-2"><i class="mdi mdi-star"></i></button>
+						</div>
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-warning  btn-icon ml-2"><i class="mdi mdi-refresh"></i></button>
+						</div>
+						<div class="mb-3 mb-xl-0">
+							<div class="btn-group dropdown">
+								<button type="button" class="btn btn-primary">14 Aug 2019</button>
+								<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" id="dropdownMenuDate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuDate" data-x-placement="bottom-end">
+									<a class="dropdown-item" href="#">2015</a>
+									<a class="dropdown-item" href="#">2016</a>
+									<a class="dropdown-item" href="#">2017</a>
+									<a class="dropdown-item" href="#">2018</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- breadcrumb -->
+@endsection
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">الأشخاص الذين أعجبهم هذا المنشور</h5>
-                </div>
-                <div class="card-body">
-                    @forelse($likes as $like)
-                        <div class="d-flex align-items-center p-2 border-bottom">
-                            <img src="{{ $like->user->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode($like->user->name) }}" 
-                                 class="rounded-circle me-3" width="50" height="50" alt="{{ $like->user->name }}">
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0">
-                                    <a href="{{ route('user.profile', $like->user) }}" class="text-decoration-none">
-                                        {{ $like->user->name }}
-                                    </a>
-                                </h6>
-                                <small class="text-muted">{{ $like->created_at->diffForHumans() }}</small>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-center text-muted py-4">لا توجد إعجابات بعد</p>
-                    @endforelse
-                </div>
-                <div class="card-footer">
-                    <a href="{{ route('posts.show', $post) }}" class="btn btn-sm btn-secondary">
-                        <i class="bi bi-arrow-right"></i> العودة للمنشور
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+				<!-- row -->
+				<div class="row">
+<div class="max-w-xl mx-auto mt-6">
+
+    <h3 class="text-xl font-bold mb-4">Likes for: "{{ $post->content }}"</h3>
+
+    @if($likes->isEmpty())
+        <p>No likes yet 😢</p>
+    @else
+        <ul>
+            @foreach($likes as $like)
+                <li class="flex items-center gap-3 mb-2">
+                    <img src="{{ $like->user->profile_picture
+                        ? asset('storage/'.$like->user->profile_picture)
+                        : asset('images/default.png') }}"
+                        width="40" class="rounded-full">
+
+                    <span>{{ $like->user->name }}</span>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+
+    <a href="{{ route('post.show', $post) }}" class="btn btn-primary mt-4">
+        Back to Post
+    </a>
 </div>
+
+				</div>
+				<!-- row closed -->
+			</div>
+			<!-- Container closed -->
+		</div>
+		<!-- main-content closed -->
+@endsection
+@section('js')
 @endsection

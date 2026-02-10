@@ -10,17 +10,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class FriendRequestSent
+class FriendRequestSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public $sender;
-    public function __construct($sender)
+    public $receiver;
+    public function __construct($receiver)
     {
-        $this->sender = $sender;
+        $this->receiver = $receiver;
     }
 
     /**
@@ -31,7 +31,7 @@ class FriendRequestSent
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->sender->id),
+            new PrivateChannel('user.' . $this->receiver->id),
         ];
     }
 }

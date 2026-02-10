@@ -99,4 +99,12 @@ public function friendsOfFriend()
     return $this->hasMany(Friend::class, 'sender_id')->where('status', 'accepted');
 }
 
+    public function confirmedFriends()
+    {
+        // هتجيب كل الأصدقاء سواء sender أو receiver مع status = accepted
+        return $this->hasMany(Friend::class, 'sender_id')
+                    ->where('status', 'accepted')
+                    ->orWhere('receiver_id', $this->id);
+    }
+
 }

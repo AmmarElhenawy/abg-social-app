@@ -1,49 +1,78 @@
-@extends('layouts.app')
-
-@section('title', 'إنشاء منشور جديد')
-
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">إنشاء منشور جديد</h5>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        
-                        <div class="mb-3">
-                            <label for="content" class="form-label">المحتوى</label>
-                            <textarea name="content" id="content" 
-                                      class="form-control @error('content') is-invalid @enderror" 
-                                      rows="6" placeholder="ماذا تريد أن تشارك؟" required>{{ old('content') }}</textarea>
-                            @error('content')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="image" class="form-label">صورة (اختياري)</label>
-                            <input type="file" name="image" id="image" 
-                                   class="form-control @error('image') is-invalid @enderror" accept="image/*">
-                            @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="text-muted">الحد الأقصى: 2 ميجابايت</small>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('dashboard') }}" class="btn btn-secondary">إلغاء</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-send-fill"></i> نشر
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@extends('layouts.master')
+@section('css')
 @endsection
+@section('page-header')
+				<!-- breadcrumb -->
+				<div class="breadcrumb-header justify-content-between">
+					<div class="my-auto">
+						<div class="d-flex">
+							<h4 class="content-title mb-0 my-auto">Pages</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Empty</span>
+						</div>
+					</div>
+					<div class="d-flex my-xl-auto right-content">
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-info btn-icon ml-2"><i class="mdi mdi-filter-variant"></i></button>
+						</div>
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-danger btn-icon ml-2"><i class="mdi mdi-star"></i></button>
+						</div>
+						<div class="pr-1 mb-3 mb-xl-0">
+							<button type="button" class="btn btn-warning  btn-icon ml-2"><i class="mdi mdi-refresh"></i></button>
+						</div>
+						<div class="mb-3 mb-xl-0">
+							<div class="btn-group dropdown">
+								<button type="button" class="btn btn-primary">14 Aug 2019</button>
+								<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" id="dropdownMenuDate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuDate" data-x-placement="bottom-end">
+									<a class="dropdown-item" href="#">2015</a>
+									<a class="dropdown-item" href="#">2016</a>
+									<a class="dropdown-item" href="#">2017</a>
+									<a class="dropdown-item" href="#">2018</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- breadcrumb -->
+@endsection
+@section('content')
+				<!-- row -->
+				<div class="row max-w-xl mx-auto mt-6">
+                    <form method="POST" action="{{ route('post.store') }}" enctype="multipart/form-data">
+    @csrf
+
+    <textarea name="content" class="form-control mb-3"
+        placeholder="What's on your mind?"></textarea>
+
+    <input type="file" name="image" class="mb-3">
+
+    <button class="btn btn-success">Post</button>
+</form>
+				</div>
+				<!-- row closed -->
+			</div>
+			<!-- Container closed -->
+		</div>
+		<!-- main-content closed -->
+@endsection
+@section('js')
+@endsection
+
+
+
+{{-- <x-app-layout>
+<div class="max-w-xl mx-auto mt-6">
+<form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
+    @csrf
+
+    <textarea name="content" class="form-control mb-3"
+        placeholder="What's on your mind?"></textarea>
+
+    <input type="file" name="image" class="mb-3">
+
+    <button class="btn btn-success">Post</button>
+</form>
+</div>
+</x-app-layout> --}}

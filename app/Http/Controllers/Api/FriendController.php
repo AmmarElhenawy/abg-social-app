@@ -56,7 +56,7 @@ class FriendController extends BaseApiController
             'receiver_id' => $receiver->id,
         ]);
 
-            broadcast(new FriendRequestSent($sender))->toOthers();
+            broadcast(new FriendRequestSent($receiver))->toOthers();
             return $this->success(null, 'Friend request sent');
         // } catch (Exception $e) {
         //     return $this->error('Failed to send friend request', 500);
@@ -150,11 +150,11 @@ class FriendController extends BaseApiController
 
         $deleted = Friend::where(function ($q) use ($authUser, $receiver) {
             $q->where('sender_id', $authUser->id)
-              ->where('receiver_id', $receiver->id);
+            ->where('receiver_id', $receiver->id);
         })
         ->orWhere(function ($q) use ($authUser, $receiver) {
             $q->where('sender_id', $receiver->id)
-              ->where('receiver_id', $authUser->id);
+            ->where('receiver_id', $authUser->id);
         })
         ->delete();
 
@@ -164,7 +164,7 @@ class FriendController extends BaseApiController
 
         return $this->success(null, 'Unfriended');
 
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return $this->error('Failed to unfriend', 500);
     }
 }
