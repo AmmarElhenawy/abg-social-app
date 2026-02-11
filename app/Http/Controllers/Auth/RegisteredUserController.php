@@ -19,7 +19,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.reg');
+        return view('auth.register');
     }
 
     /**
@@ -29,22 +29,32 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $data=$request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+            'profile_picture' => [ 'max:2048'],
+    ]);
+
+    // $profilePicturePath = null;
+
+    if ($request->hasFile('profile_picture')) {
+        $data['profile_picture'] = $request->file('profile_picture')
+            ->store('profiles', 'public');
+    }
+
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'profile_picture' => $data['profile_picture'],
+
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
-    }
+        return redirect('/feed');    }
 }

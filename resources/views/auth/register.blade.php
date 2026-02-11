@@ -1,137 +1,130 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Register</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
-
-                        {{-- Name --}}
-                        <div class="row mb-3">
-                            <label class="col-md-4 col-form-label text-md-end">Name</label>
-                            <div class="col-md-6">
-                                <input type="text" name="name"
-                                    class="form-control @error('name') is-invalid @enderror"
-                                    value="{{ old('name') }}" required autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Email --}}
-                        <div class="row mb-3">
-                            <label class="col-md-4 col-form-label text-md-end">Email</label>
-                            <div class="col-md-6">
-                                <input type="email" name="email"
-                                    class="form-control @error('email') is-invalid @enderror"
-                                    value="{{ old('email') }}" required>
-
-                                @error('email')
-                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Password --}}
-                        <div class="row mb-3">
-                            <label class="col-md-4 col-form-label text-md-end">Password</label>
-                            <div class="col-md-6">
-                                <input type="password" name="password"
-                                    class="form-control @error('password') is-invalid @enderror"
-                                    required>
-
-                                @error('password')
-                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Confirm --}}
-                        <div class="row mb-3">
-                            <label class="col-md-4 col-form-label text-md-end">Confirm Password</label>
-                            <div class="col-md-6">
-                                <input type="password" name="password_confirmation"
-                                    class="form-control" required>
-                            </div>
-                        </div>
-
-                        {{-- Buttons --}}
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button class="btn btn-primary">
-                                    Register
-                                </button>
-
-                                <a href="{{ route('login') }}" class="btn btn-link">
-                                    Already registered?
-                                </a>
-                            </div>
-                        </div>
-
-                    </form>
+@extends('layouts.master')
+@section('css')
+@endsection
+@section('page-header')
+    <!-- breadcrumb -->
+    <div class="breadcrumb-header justify-content-between">
+        <div class="my-auto">
+            <div class="d-flex">
+                <h4 class="content-title mb-0 my-auto">Pages</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/
+                    Empty</span>
+            </div>
+        </div>
+        <div class="d-flex my-xl-auto right-content">
+            <div class="pr-1 mb-3 mb-xl-0">
+                <button type="button" class="btn btn-info btn-icon ml-2"><i class="mdi mdi-filter-variant"></i></button>
+            </div>
+            <div class="pr-1 mb-3 mb-xl-0">
+                <button type="button" class="btn btn-danger btn-icon ml-2"><i class="mdi mdi-star"></i></button>
+            </div>
+            <div class="pr-1 mb-3 mb-xl-0">
+                <button type="button" class="btn btn-warning  btn-icon ml-2"><i class="mdi mdi-refresh"></i></button>
+            </div>
+            <div class="mb-3 mb-xl-0">
+                <div class="btn-group dropdown">
+                    <button type="button" class="btn btn-primary">14 Aug 2019</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                        id="dropdownMenuDate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuDate"
+                        data-x-placement="bottom-end">
+                        <a class="dropdown-item" href="#">2015</a>
+                        <a class="dropdown-item" href="#">2016</a>
+                        <a class="dropdown-item" href="#">2017</a>
+                        <a class="dropdown-item" href="#">2018</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <!-- breadcrumb -->
 @endsection
+@section('content')
+    <!-- row -->
+    <div class="row">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
 
-{{-- <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+                    <div class="card shadow-sm">
+                        <div class="card-header text-center">
+                            <h4>Create Account</h4>
+                        </div>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        <div class="card-body">
+
+                            {{-- Errors --}}
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <form method="POST" action="{{ route('register.post') }}">
+                                @csrf
+
+                                {{-- Profile Picture --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Profile Picture</label>
+                                    <input type="file" name="profile_picture" class="form-control" accept="image/*">
+                                </div>
+                                {{-- Name --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+                                </div>
+
+                                {{-- Email --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" value="{{ old('email') }}"
+                                        required>
+                                </div>
+
+                                {{-- Password --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" name="password" class="form-control" required>
+                                </div>
+
+                                {{-- Confirm Password --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password" name="password_confirmation" class="form-control" required>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        Register
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div class="card-footer text-center">
+                            <small>
+                                Already have an account?
+                                <a href="{{ route('login') }}">Login</a>
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
         </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout> --}}
+    </div>
+    <!-- row closed -->
+    </div>
+    <!-- Container closed -->
+    </div>
+    <!-- main-content closed -->
+@endsection
+@section('js')
+@endsection

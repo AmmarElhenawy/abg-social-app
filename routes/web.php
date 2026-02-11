@@ -9,7 +9,7 @@ use App\Http\Controllers\web\FriendController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\web\PostController;
-use App\Http\Controllers\ProfileController;
+// use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Web\FriendController as WebFriendController;
 use App\Http\Controllers\web\LikeController as WebLikeController;
@@ -211,21 +211,22 @@ Route::middleware('auth')->group(function () {
         ->name('profile.destroy');
 
 
-    Route::get('/profile/friends/{user}', [ProfileController::class, 'friends'])->name('profile.friends');
-    Route::get('/profile/posts/{user}', [ProfileController::class, 'posts'])->name('profile.posts');
+    Route::get('/profile/friends/{user}', [WebProfileController::class, 'friends'])->name('profile.friends');
+    Route::get('/profile/posts/{user}', [WebProfileController::class, 'posts'])->name('profile.posts');
     Route::get('/search', [WebSearchController::class, 'search'])->name('search');
 });
 
 
 
-Route::get('/{page}', 'App\Http\Controllers\AdminController@index');
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.post');
 
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
-});
-Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-// Route::post('/register', [AuthenticatedSessionController::class, 'register']);
+    ->name('logout');
+    });
+
+    Route::get('/{page}', 'App\Http\Controllers\AdminController@index');

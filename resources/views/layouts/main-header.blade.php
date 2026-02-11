@@ -1,3 +1,5 @@
+@auth
+
 <!-- main-header opened -->
 <div class="main-header sticky side-header nav nav-item">
     <div class="container-fluid">
@@ -338,3 +340,4 @@
     </div>
 </div>
 <!-- /main-header -->
+@endauth

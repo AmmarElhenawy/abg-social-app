@@ -112,7 +112,10 @@
                             @endif
 
                                 <div class="text-center">
-<a href="{{ route('register') }}" class="btn btn-primary">Register</a>
+<button type="button" onclick="window.location='{{ route('register') }}'">
+    Register
+</button>
+
 
                                 </div>
 

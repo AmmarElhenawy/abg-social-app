@@ -49,7 +49,7 @@
         <p class="mb-3">{{ $post->content }}</p>
 
         @if($post->image)
-            <img src="{{ asset('storage/'.$post->image) }}" class="mb-4">
+            <img src="{{ asset('storage/profiles'.$post->image) }}" class="mb-4">
         @endif
 
         <hr>
