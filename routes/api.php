@@ -19,6 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::post('/verify-reset', [AuthController::class, 'verifyResetPassword']);
+Route::post('/change-password', [AuthController::class, 'changePassword']);
+
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

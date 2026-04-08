@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use PhpParser\Node\Stmt\TryCatch;
 use Throwable;
@@ -89,6 +90,103 @@ class AuthController extends BaseApiController
 
         }
     }
+
+    public function resetPassword(Request $request)
+{
+    $request->validate([
+        'email' => 'required'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    $otp = rand(100000, 999999);
+
+    $user->update([
+        'verification_code' => $otp,
+        'verification_code_expires_at' => now()->addMinutes(5),
+    ]);
+
+        Mail::raw("Your OTP is: $otp", function ($message) use ($user) {
+        $message->to($user->email)
+                ->subject('Reset Password OTP');
+    });
+
+    return response()->json([
+        'message' => 'OTP sent to your email'
+    ]);
+}
+
+public function verifyResetPassword(Request $request)
+{
+    $request->validate([
+        'email' => 'required',
+        'otp' => 'required'
+    ]);
+
+    $user = User::where('email', $request->phone)->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    if (
+        $user->verification_code !== $request->otp ||
+        now()->greaterThan($user->verification_code_expires_at)
+    ) {
+        return response()->json(['message' => 'Invalid or expired OTP'], 400);
+    }
+
+        $user->update([
+        'verification_code' => null,
+        'verification_code_expires_at' => null,
+        'is_reset_verified' => true
+    ]);
+
+    return response()->json([
+        'message' => 'OTP verified'
+    ]);
+}
+
+public function changePassword(Request $request)
+{
+    $request->validate([
+        'email' => 'required',
+        'password' => 'required|min:6'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    // if (!$user->verification_code) {
+    //     return response()->json([
+    //         'message' => 'You must verify OTP first'
+    //     ], 401);
+    // }
+        if (!$user->is_reset_verified) {
+        return response()->json([
+            'message' => 'You must verify OTP first'
+        ], 401);
+    }
+
+    $user->update([
+        'password' => bcrypt($request->password),
+        'is_reset_verified' => false
+    ]);
+
+    return response()->json([
+        'message' => 'Password changed successfully'
+    ]);
+}
+
+
+
 
     public function user(Request $request)
 {
